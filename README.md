@@ -1,6 +1,6 @@
-# Svclient
+# Strava Viewer
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.8.
+View all of your Strava activities in an easy-to-filter way. Great for finding older activities or identifying needed data corrections.
 
 ## Development server
 
