@@ -27,9 +27,8 @@ export class AuthenticationComponent {
     if (code) {
       this.authService.getStravaAccessToken(code);
       this.isLoggedIn = true;
+      this.router.navigate(['/']);
     }
 
-
-    this.router.navigate(['/']);
   }
 }

@@ -1,14 +1,75 @@
-@if(!isLoggedIn){
-  <button class="btn btn-primary" (click)="login()">Login</button>
-} @else {
-  <button class="btn btn-primary" (click)="logout()">Log Out</button>
+<div class="container" style="max-width: 980px; margin-left: auto; margin-right: auto;">
+  <div class="row">
+    <div class="col">
 
-  @if(profile) {
-    <div>Welcome, {{ profile.firstname }}!</div>
+      @if(!isLoggedIn){
+        <button class="btn btn-primary" (click)="login()">Login</button>
+      } @else {
+        
+      
+        @if(profile && stats) {
+      
+          <div class="d-flex align-items-start justify-content-between pt-3">
+          
+            <div class="d-flex align-items-start">
+              <img [src]="profile.profile" alt="Profile picture" class="rounded me-3 shadow mt-2" />
+        
+              <div>
+                <div class="h3 mb-0">{{ profile.firstname }} {{ profile.lastname }}</div>
+                <div>{{ stats.all_ride_totals.count}} rides</div>
 
-    <img [src]="profile.profile_medium" alt="Profile picture" class="rounded" />
-  }
-}
+                <div class="h5 mt-3">My Bikes</div>
+                @for(bike of profile.bikes; track bike.id) {
+                  <div>{{ bike.name }}: {{bike.distance_miles | number : '1.2-2'}} miles</div>
+                }
+
+                
+                @if(activities) {
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <div class="h5 mt-3 mb-0">My Activities</div>
+                      <div class="text-muted text-sm mb-3">{{activities.length}} activities</div>
+                    </div>
+                    
+                    <button class="btn btn-default" (click)="refreshActivities()">Refresh</button>
+                  </div>                  
+
+                  <div class="d-flex mb-3">
+                    <input type="text" class="form-control me-3" placeholder="Filter activities" 
+                      [ngModel]="activityFilter.description" 
+                      (ngModelChange)="onFilterTextChanged($event)" />
+
+                    <input type="number" class="form-control me-3" placeholder="Min distance" 
+                      [(ngModel)]="activityFilter.distance_min" 
+                      (ngModelChange)="filterActivities()" />
+
+                    <input type="number" class="form-control me-3" placeholder="Max distance" 
+                      [(ngModel)]="activityFilter.distance_max" 
+                      (ngModelChange)="filterActivities()" />
+                  </div>
+
+                  @for(activity of filteredActivities; track activity.id) {
+                    <div class="mb-2">
+                      <a href="https://strava.com/activities/{{activity.id}}">{{activity.name}}</a>
+                      <div class="text-muted">{{activity.start_date | date : 'short'}} - {{activity.bike?.name}}, {{(activity.distance / 1609.34) | number : '1.2-2'}} miles</div>                      
+                    </div>
+                  }
+                } @else {
+                  <div>Loading...</div>
+                }
+
+              </div>
+            </div>
+
+            <button class="btn btn-default" (click)="logout()">Log Out</button>
+          </div>
+
+        }
+      }
+      
+      <router-outlet />
+    </div>
+  </div>
+</div>
 
 
-<router-outlet />
